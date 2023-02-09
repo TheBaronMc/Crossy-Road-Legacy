@@ -35,6 +35,11 @@ public class ReactiveTarget: MonoBehaviour
         return NbOfLive;
     }
 
+    public void SetNbLife(int lifes)
+    {
+        NbOfLive = lifes;
+    }
+
     public void SetBeforeBirth(CallBack cb)
     {
         beforeBirth = cb;

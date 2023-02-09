@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System;
 using System.Globalization;
 using TMPro;
@@ -14,10 +15,11 @@ public class SceneController : MonoBehaviour
 
     public TextMeshProUGUI time;
     public TextMeshProUGUI end;
+    public GameObject exitButton;
 
     public float GameTime;
 
-    public const int MAX_CAR = 5;
+    public int MAX_CAR;
     public const float SPAWN_DELTA_S = 1f;
 
     private List<GameObject> LeftToRightCars;
@@ -38,6 +40,10 @@ public class SceneController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        MAX_CAR = PlayerPrefs.GetInt("ENNEMIES");
+        player.GetComponent<ReactiveTarget>().SetNbLife(PlayerPrefs.GetInt("LIFE"));
+        GameTime = PlayerPrefs.GetInt("TIME");
+
         LeftToRightCars = new List<GameObject>();
         RightToLeftCars = new List<GameObject>();
 
@@ -54,6 +60,7 @@ public class SceneController : MonoBehaviour
         player.GetComponent<ReactiveTarget>().SetBeforeDeath(new BeforeDeathCallBack(cam, end, game));
 
         end.enabled = false;
+        exitButton.SetActive(false);
 
         createCar();
     }
@@ -81,6 +88,7 @@ public class SceneController : MonoBehaviour
         if (game.IsEnded())
         {
             end.enabled = true;
+            exitButton.SetActive(true);
         }
     }
 
@@ -150,6 +158,11 @@ public class SceneController : MonoBehaviour
         {
             Destroy(car);
         }
+    }
+
+    public void ExitGame()
+    {
+        SceneManager.LoadScene(0);
     }
 
     IEnumerator Respawn()
